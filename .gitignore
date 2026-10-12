@@ -1,0 +1,17 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+.pytest_cache/
+.venv/
+node_modules/
+dist/
+.dart_tool/
+build/
+*.pyc
+.DS_Store
+.idea/
+*.iml
+*.tsbuildinfo
+.gradle/
+.cxx/

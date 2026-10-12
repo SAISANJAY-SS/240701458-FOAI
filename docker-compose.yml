@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: resqai
+      POSTGRES_USER: resqai
+      POSTGRES_PASSWORD: resqai
+    ports: ["5432:5432"]
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+  backend:
+    image: python:3.13-slim
+    working_dir: /workspace
+    environment:
+      DATABASE_URL: postgresql+asyncpg://resqai:resqai@postgres:5432/resqai
+      DEMO_MODE: "true"
+      JWT_SECRET: change-this-in-production
+    volumes: ["./backend:/workspace/backend"]
+    ports: ["8000:8000"]
+    depends_on: [postgres]
+    command: sh -c "pip install -q -r backend/requirements.txt && uvicorn backend.app.main:app --host 0.0.0.0 --port 8000"
+volumes:
+  postgres_data:
